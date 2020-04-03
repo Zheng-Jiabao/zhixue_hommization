@@ -54,6 +54,12 @@ var afdoption = {
 afdoption.clearscreen = () => {
 	document.getElementById("clear-screen-area-0").innerHTML = ""
 }
+var pbbyRegExp = {
+	Namepattern: "黑魔仙.*",
+	Nameenable: 1,
+	datapattern: "<!--.*-->",
+	dataenable: 1
+}
 var afdoption_shuaping = {
 	count: 10,
 	data: "orz"
@@ -110,7 +116,7 @@ var music163setup = {
 	id: "561493928",
 	count: 5
 }
-var banfullmsg={
+var banfullmsg = {
 	_$possiblityban: 0
 }
 music163setup.sendchat = () => {
@@ -158,17 +164,17 @@ bilibilisetup.dmsp = () => {
 }
 
 afd_fullscreen = {
-	text:"<img style='width:100%;height:100%' src='https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1585713112&di=09555251c011256b12688c82c01b2095&src=http://www.xz7.com/up/2017-7/2017071009162717949.jpg'>"
+	text: "<img style='width:100%;height:100%' src='https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1585713112&di=09555251c011256b12688c82c01b2095&src=http://www.xz7.com/up/2017-7/2017071009162717949.jpg'>"
 }
-afd_fullscreen_img={
-	url:"https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1585713112&di=09555251c011256b12688c82c01b2095&src=http://www.xz7.com/up/2017-7/2017071009162717949.jpg"
+afd_fullscreen_img = {
+	url: "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1585713112&di=09555251c011256b12688c82c01b2095&src=http://www.xz7.com/up/2017-7/2017071009162717949.jpg"
 }
-afd_fullscreen_img.send=()=>{
-	sendContent="<!--fs--><div style='position:fixed;top:0;left:0;width:100%;height:100%'><img style='width:100%;height:100%' src='"+afd_fullscreen_img.url+"'></div>"
+afd_fullscreen_img.send = () => {
+	sendContent = "<!--fs--><div style='position:fixed;top:0;left:0;width:100%;height:100%'><img style='width:100%;height:100%' src='" + afd_fullscreen_img.url + "'></div>"
 	document.querySelector(".sendMsgBtn").click()
 }
-afd_fullscreen.send=()=>{
-	sendContent="<!--fs--><div style='position:fixed;top:0;left:0;width:100%;height:100%'>"+afd_fullscreen.text+"</div>"
+afd_fullscreen.send = () => {
+	sendContent = "<!--fs--><div style='position:fixed;top:0;left:0;width:100%;height:100%'>" + afd_fullscreen.text + "</div>"
 	document.querySelector(".sendMsgBtn").click()
 }
 $.getScript("https://cdn.bootcss.com/dat-gui/0.7.6/dat.gui.min.js", () => {
@@ -176,7 +182,6 @@ $.getScript("https://cdn.bootcss.com/dat-gui/0.7.6/dat.gui.min.js", () => {
 	gui.remember(option);
 	gui.add(option, "username").name("用户名")
 	gui.add(option, "usertype", [-1, 0, 1, 2, 3]).name("用户类型")
-	gui.add(afdoption, "enable")
 	gui.add(afdoption, "clearscreen").name("清空讨论区")
 	var afd_1 = gui.addFolder("刷屏")
 	afd_1.add(afdoption_shuaping, "count", 1, 100).step(1).name("次数（基数是1不是10，请放心使用）")
@@ -209,10 +214,15 @@ $.getScript("https://cdn.bootcss.com/dat-gui/0.7.6/dat.gui.min.js", () => {
 	var afd_4 = gui.addFolder("全屏消息")
 	afd_4.add(afd_fullscreen, "text").name("文本（HTML）")
 	afd_4.add(afd_fullscreen, "send").name("发送")
-	afd_4.add(banfullmsg, "_$possiblityban",0,0.8).name("屏蔽率").step(0.01)
+	afd_4.add(banfullmsg, "_$possiblityban", 0, 0.95).name("屏蔽率").step(0.01)
 	var afd_4a = afd_4.addFolder("图片")
 	afd_4a.add(afd_fullscreen_img, "url").name("URL")
 	afd_4a.add(afd_fullscreen_img, "send").name("发送")
+	var afd_5 = gui.addFolder("屏蔽信息设置")
+	afd_5.add(pbbyRegExp, "Namepattern").name("姓名（正则表达式）")
+	afd_5.add(pbbyRegExp, "Nameenable", 0, 1).step(1).name("姓名（0不开启）")
+	afd_5.add(pbbyRegExp, "datapattern").name("正文（正则表达式）")
+	afd_5.add(pbbyRegExp, "dataenable", 0, 1).step(1).name("正文（0不开启）")
 })
 
 
@@ -32559,64 +32569,6 @@ webpackJsonp([0], {
 											}
 										}), sendContent = "", this.$refs.enterChat.value = ""
 									}
-									var i = {
-										type: option.usertype,
-										nickName: option.username,
-										msg: n
-									},
-									o = r()(i);
-								this.$store.state.$TICSDK.sendGroupTextMessage(o, function (t) {
-									if (t.code && 80001 === t.code) {
-										var i = t.desc.split("response:"),
-											o = JSON.parse(i[1]),
-											a = s.a.removeBeatWord(o.ErrorInfo, n),
-											l = {
-												type: 1,
-												nickName: e.user_name,
-												msg: a
-											};
-										e.$store.state.$TICSDK.sendGroupTextMessage(r()(l), function (t) {
-											if (t.code) {
-												var i = {
-													type: "msg",
-													roleType: 1,
-													fromNick: e.user_name,
-													fromId: e.user_id,
-													content: n
-												};
-												e.renerIMMethod(i)
-											}
-										})
-									} else if (t.code && 10017 === t.code) {
-										var c = {
-											type: "msg",
-											roleType: 1,
-											fromNick: e.user_name,
-											fromId: e.user_id,
-											content: n
-										};
-										e.renerIMMethod(c)
-									} else if (t.code && 20012 === t.code) {
-										var u = {
-											type: "msg",
-											roleType: 1,
-											fromNick: e.user_name,
-											fromId: e.user_id,
-											content: n
-										};
-										e.renerIMMethod(u)
-									} else if (t.code) {
-										var h = {
-											type: "msg",
-											roleType: 1,
-											fromNick: e.user_name,
-											fromId: e.user_id,
-											content: n
-										};
-										e.renerIMMethod(h)
-									}
-								}), sendContent = "", this.$refs.enterChat.value = ""
-							}
 								} else {
 									if (this.$store.state.$TICSDK) {
 										var i = {
@@ -55639,8 +55591,21 @@ webpackJsonp([0], {
 						s = document.createElement("span"),
 						o = e[e.length - 1];
 					o.content = u.htmlEscape(o.content);
-					if(o.content.indexOf("<!--fs-->")!=-1&&Math.random()<=banfullmsg._$possiblityban){
-						o.content="<span>这个全屏信息很不幸的落到了possibilityban里，于是，它的content被掉包了qwq</span>"
+					if (o.content.indexOf("<!--fs-->") != -1 && Math.random() <= banfullmsg._$possiblityban) {
+						o.content = "<span>这个全屏信息很不幸的落到了possibilityban里，于是，它的content被掉包了qwq</span>"
+					}
+					if (pbbyRegExp.Nameenable != 0) {
+						var xxx = new RegExp(pbbyRegExp.Namepattern, "g")
+						if (xxx.test(o.fromNick)) {
+							o.content = "<span>此信息被姓名屏蔽规则屏蔽</span>"
+						}
+						return n
+					}
+					if (pbbyRegExp.dataenable != 0) {
+						var xxx = new RegExp(pbbyRegExp.datapattern, "g")
+						if (xxx.test(o.content)) {
+							o.content = "<span>此信息被内容屏蔽规则屏蔽</span>"
+						}
 					}
 					a.a.state.isGroupBan;
 					var l = a.a.state.user_id,
@@ -55653,7 +55618,7 @@ webpackJsonp([0], {
 						f.push(e.userId)
 					});
 					var m = /^\[助教\]/g;
-					var possi=Math.random()
+					var possi = Math.random()
 					//a?b:c  will trans into:
 					// a
 					// ?
