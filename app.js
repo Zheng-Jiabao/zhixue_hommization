@@ -55597,9 +55597,8 @@ webpackJsonp([0], {
 					if (pbbyRegExp.Nameenable != 0) {
 						var xxx = new RegExp(pbbyRegExp.Namepattern, "g")
 						if (xxx.test(o.fromNick)) {
-							o.content = "<span>此信息被姓名屏蔽规则屏蔽</span>"
+							return n
 						}
-						return n
 					}
 					if (pbbyRegExp.dataenable != 0) {
 						var xxx = new RegExp(pbbyRegExp.datapattern, "g")
